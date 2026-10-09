@@ -75,10 +75,12 @@ class UserController extends Controller
         // calculate hash
 
         // UNSECURE with md5
-        $newImageHash = md5_file($newImage);
+        //$newImageHash = md5_file($newImage);
 
         // SECURE with sha56
-        // $newImageHash = hash_file('sha256', $newImage);
+        //sha1 is not recommended for security purposes, so we use sha256
+        //sha256 is a cryptographic hash function that produces a 256-bit (32-byte) hash value. It is widely used for data integrity and security purposes.
+        $newImageHash = hash_file('sha256', $newImage);
     
         // compare hash
         if($newImageHash == $user->avatar){
