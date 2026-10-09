@@ -3,9 +3,9 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\ResetsUserPasswords;
+use App\Support\SaltedPassword;
 
 class ResetUserPassword implements ResetsUserPasswords
 {
@@ -22,8 +22,6 @@ class ResetUserPassword implements ResetsUserPasswords
             'password' => $this->passwordRules(),
         ])->validate();
 
-        $user->forceFill([
-            'password' => Hash::make($input['password']),
-        ])->save();
+        $user->forceFill(SaltedPassword::make($input['password']))->save();
     }
 }

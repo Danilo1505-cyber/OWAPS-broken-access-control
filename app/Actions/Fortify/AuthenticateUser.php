@@ -2,23 +2,26 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\User;
+use App\Support\SaltedPassword;
 use Laravel\Fortify\Http\Requests\LoginRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+
 class AuthenticateUser
 {
     public function __invoke(LoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
-        $user = \App\Models\User::where('email', $credentials['email'])->first();
-        if ($user) {
-            $pepper = config('app.pepper');
-            $passwordWithSaltPepper = $credentials['password'] . $user->salt . $pepper;
-            if (Hash::check($passwordWithSaltPepper, $user->password)){
-                Auth::login($user);
-                return $user;
-            }
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (! $user || ! SaltedPassword::check($user, $credentials['password'])) {
+            return null;
         }
-        return null;  //restituiamo null se l'autenticazione fallisce
+
+        // Utente vecchio con password corretta → lo migro
+        if ((int) $user->hash_version !== 2) {
+            $user->forceFill(SaltedPassword::make($credentials['password']))->save();
+        }
+
+        return $user;
     }
 }
