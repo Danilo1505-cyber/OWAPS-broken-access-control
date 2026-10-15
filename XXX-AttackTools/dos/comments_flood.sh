@@ -1,9 +1,9 @@
 #!/bin/bash
 
-URL="http://localhost:8000/articles/1/comments"
+URL="http://localhost:8000/articles/11/comments"
 NUM_REQUESTS=100
-CSRF_TOKEN="smDj0QeOvDKucPgrsFQeVI4t3H2P5gqVKNOab8XM"
-SESSION_COOKIE="laravel_session=eyJpdiI6IkNYc1JQdDFjdWtYRXh5aFpGOUNUV1E9PSIsInZhbHVlIjoiTUlJYmlTM1FJNTFsSHpIcmo2Q0d1alliVDkzRzdlaWk0SjlueHk4UGlWbVZUdG1ybzA0WXNZQmJ5TGJXWHVQbFBnazJiZmc2UlFWRFF2UGxJSUZGUjFvQVJwWjVvYmlXVG13RUZYOWJ0NUF2My9pelh1akp4YVF2bGhwYU52QUkiLCJtYWMiOiIzMDA5ODczMTQwOTM2ZjRmOGU0NTNmYzMwZDI2ZWJhMmY0YTFkMjNlYjNiZDU5Yzk0N2ViZTk2OTE5M2ViOTFjIiwidGFnIjoiIn0%3D"
+CSRF_TOKEN="eqREXJiEcqeKuhS4kubRmuBULSWkxzMIOBHFRrTY"
+SESSION_COOKIE="laravel_session=eyJpdiI6Ijh0TjE4SFAxWlpROHlHbk5lSi80WEE9PSIsInZhbHVlIjoiOTRnRzhQSW0yZUI4QUh2MTVOcEd2Z2VqdEYxejRhSHBXdjFCSm1ybDhoa1J5MHV3N2QxUDZlU3g1SVU2WU9lVTBNYjJPNHRyKzdkdThNckl0TXNObnN1eVZ4MWlyYi9SYVQ4cS9RS0FRbDZIY1Y3bE5tRWwycU1xdW4rNVdrWEUiLCJtYWMiOiIzNDI3MzY5ODM1YTRmMTRmYWQzOTNkODFmYTQ0MDdhOGIyYTllY2Y3NmNhY2YzZWNmNWFmNjFjNjEyNDYxNTg2IiwidGFnIjoiIn0%3D"
 
 send_comment(){
     local comment_number=$1
@@ -13,8 +13,9 @@ send_comment(){
 for ((i=1; i<=NUM_REQUESTS; i++))
 do
     send_comment $i
-    if [$((i % 5))-eq 0]; then
-        "sleep 60"
+    if [ $((i % 5)) -eq 0 ]; then
+        echo "Sent 5 comments, waiting for 1 minute..."
+        sleep 60
     fi
     echo "Comment $i sent"
 done

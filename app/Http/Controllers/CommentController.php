@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Rules\Recaptcha;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -16,6 +17,7 @@ class CommentController extends Controller
     {
         $request->validate([
             'content' => 'required|max:160',
+            'g-recaptcha-response' => ['required', new Recaptcha],
         ]);
 
         $comment = new Comment;

@@ -34,13 +34,23 @@
                             {!! $article->content !!}
                         </div>
                         <h5 class="mb-3 fw-bold"><i class="bi bi-chat-dots me-2"></i>Comments</h5>
-                        <form action="{{ route('comments.store', $article->id) }}" method="post" class="mb-4">
+                        <form id="comment-form" action="{{ route('comments.store', $article->id) }}" method="post"
+                            class="mb-4">
                             @csrf
+                            <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+
                             <div class="input-group">
                                 <input type="text" placeholder="Insert comment"
-                                    class="form-control rounded-start-pill" name="content">
+                                    class="form-control rounded-start-pill" name="content" value="{{ old('content') }}">
                                 <button type="submit" class="btn btn-success rounded-end-pill px-4">Send</button>
                             </div>
+
+                            @error('content')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                            @enderror
+                            @error('g-recaptcha-response')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                            @enderror
                         </form>
                         <div class="pt-2">
                             @forelse ($article->comments as $comment)
@@ -58,4 +68,20 @@
             </div>
         </div>
     </div>
+    <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+    <script>
+        document.getElementById('comment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            grecaptcha.ready(function() {
+                grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {
+                        action: 'comment'
+                    })
+                    .then(function(token) {
+                        document.getElementById('g-recaptcha-response').value = token;
+                        form.submit();
+                    });
+            });
+        });
+    </script>
 </x-layouts.app>
