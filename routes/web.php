@@ -37,12 +37,13 @@ Route::middleware(['auth'])->group(function () {
     //Route::get('/users/{id}',[UserController::class,'show'])->name('profile');
     // SECURE
     Route::get('/profile',[UserController::class,'profile'])->name('profile');
+    Route::post('/user/upload',[UserController::class,'upload'])->name('user.upload');
 
     Route::patch('/users/{id}/update',[UserController::class,'update'])->name('users.update');
     Route::post('/users/name/change',[UserController::class,'changeName'])->name('change.name');
     Route::get('/users/email/change',[UserController::class,'changeEmail'])->name('change.email');
     Route::post('/users/img/change',[UserController::class,'changeImg'])->name('change.img');
-
+    Route::get('/download/{file}', [UserController::class, 'downloadPrivateFile'])->name('download.private');
     Route::get('/download-privacy', [UserController::class,'download'])->name('download');
     
     // UNSECURE
