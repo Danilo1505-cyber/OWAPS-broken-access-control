@@ -28,13 +28,14 @@ protected $blockMinutes = 1;
 
         if (Cache::has($key . ':blocked')) {
             Session::flash('error', "Your IP has been blocked for $this->blockMinutes minute(s) due to too many requests.");
+            Log::critical("IP $ip has been blocked for $this->blockMinutes minute(s) due to too many requests.");
             return redirect()->route('home');
         }
         if (Cache::has($key)) {
             $attempts = Cache::increment($key);
             if ($attempts > $this->maxAttempts) {
                 Cache::put($key . ':blocked', true, $this->blockMinutes * 60);
-                Log::warning("IP $ip has been blocked for $this->blockMinutes minute(s) due to too many requests.");
+                Log::critical("IP $ip has been blocked for $this->blockMinutes minute(s) due to too many requests.");
                 Session::flash('error', "Your IP has been blocked for $this->blockMinutes minute(s) due to too many requests.");
                 return redirect()->route('home');
             }

@@ -93,6 +93,15 @@ return [
             ],
             'processors' => [PsrLogMessageProcessor::class],
         ],
+        'papertrail_http' => [
+            'driver' => 'monolog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => App\Logging\PapertrailHandler::class,
+            'handler_with' => [
+                'url' => env('PAPERTRAIL_URL'),
+                'token' => env('PAPERTRAIL_TOKEN'),
+        ],
+        ],
 
         'stderr' => [
             'driver' => 'monolog',
@@ -127,6 +136,7 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
-    ],
+    
 
+]
 ];
